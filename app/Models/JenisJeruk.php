@@ -9,4 +9,15 @@ class JenisJeruk extends Model
 {
     /** @use HasFactory<\Database\Factories\JenisJerukFactory> */
     use HasFactory;
+
+    protected $table = 'jenis_jeruks';
+
+    protected $fillable = [
+        'jenis_jeruk',
+    ];
+
+    public function panen()
+    {
+        return $this->hasMany(Panen::class, 'id_jenis');
+    }
 }

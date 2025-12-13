@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\JenisJeruk;
-use App\Http\Requests\StoreJenisJerukRequest;
-use App\Http\Requests\UpdateJenisJerukRequest;
+use Illuminate\Http\Request;
+
 
 class JenisJerukController extends Controller
 {
@@ -13,7 +13,8 @@ class JenisJerukController extends Controller
      */
     public function index()
     {
-        //
+        $jenisJeruks = JenisJeruk::all();
+        return view('panen.jenis_jeruk', compact('jenisJeruks'));
     }
 
     /**
@@ -27,11 +28,22 @@ class JenisJerukController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreJenisJerukRequest $request)
+    public function store(Request $request)
     {
-        //
-    }
+        
+        $validatedData = $request->validate([
+            'jenis_jeruk' => 'required|string|max:255',
+        ]);
 
+        try {
+            JenisJeruk::create($validatedData);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal menambahkan jenis jeruk baru.');
+        }
+
+        return redirect()->route('jenis-jeruk.index')
+            ->with('success', 'Jenis Jeruk baru berhasil ditambahkan.');
+    }
     /**
      * Display the specified resource.
      */
@@ -51,16 +63,34 @@ class JenisJerukController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateJenisJerukRequest $request, JenisJeruk $jenisJeruk)
+    public function update(Request $request)
     {
-        //
+        try {
+            $jenisJeruk = JenisJeruk::findOrFail($request->id);
+            $jenisJeruk->update($request->all());
+        } catch (\Exception $e) {
+            return redirect()->route('jenis-jeruk.index')
+                ->with('error', 'Jenis Jeruk tidak ditemukan.');
+        }
+        
+        return redirect()->route('jenis-jeruk.index')
+            ->with('success', 'Jenis Jeruk berhasil diperbarui.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(JenisJeruk $jenisJeruk)
+    public function destroy($id)
     {
-        //
+        try {
+            $jenisJeruk = JenisJeruk::findOrFail($id);
+            $jenisJeruk->delete();
+        } catch (\Exception $e) {
+            return redirect()->route('jenis-jeruk.index')
+                ->with('error', 'Jenis Jeruk tidak ditemukan.');
+        }
+        
+        return redirect()->route('jenis-jeruk.index')
+            ->with('success', 'Jenis Jeruk berhasil dihapus.');
     }
 }
