@@ -18,7 +18,7 @@ return new class extends Migration
             $table->bigInteger('harga');
             $table->bigInteger('total_harga');
             $table->string('keterangan');
-            $table->foreignId('id_jenis')->constrained('jenis_jeruks');
+            $table->foreignId('id_jenis')->constrained('jenis_jeruks')->onDelete('cascade');
             $table->timestamps();
         });
     }

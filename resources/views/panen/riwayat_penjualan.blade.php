@@ -91,17 +91,19 @@
                             <tr>
                                 <td>{{ $no++ }}</td>
                                 <td>{{ $penjualan->tanggal_penjualan }}</td>
-                                <td>{{ formatKg($penjualan->jumlah_penjualan) }}</td>
                                 <td>{{ $penjualan->jenis->jenis_jeruk }}</td>
-                                <td>{{ $penjualan->harga }}</td>
-                                <td>{{ $penjualan->total_harga }}</td>
+                                <td>{{ formatKg($penjualan->jumlah_penjualan) }}</td>
+                                <td>{{ formatRupiah($penjualan->harga) }}</td>
+                                <td>{{ formatRupiah($penjualan->total_harga) }}</td>
                                 <td>{{ $penjualan->keterangan }}</td>
-                                <td> <button id="btn-edit" data-toggle="modal" data-target="#modalEdit"
-                                        class="btn btn-primary btn-sm " data-id="{{ $penjualan->id }}"
+                                <td> <button  data-toggle="modal" data-target="#modalEdit"
+                                        class="btn btn-primary btn-sm  btn-edit" data-id="{{ $penjualan->id }}"
                                         data-id_jenis="{{ $penjualan->jenis->id }}"
                                         data-tanggal_penjualan="{{ $penjualan->tanggal_penjualan }}"
                                         data-jumlah_penjualan="{{ $penjualan->jumlah_penjualan }}"
-                                        data-keterangan="{{ $penjualan->keterangan }}"><i
+                                        data-keterangan="{{ $penjualan->keterangan }}"
+                                        data-total_harga="{{ $penjualan->total_harga }}"
+                                        data-harga ="{{ $penjualan->harga }}" ><i
                                             class="fa fa-edit mr-1"></i>Edit</button>
                                     <a href="{{ route('riwayat-penjualan.destroy', $penjualan->id) }}"
                                         class="btn btn-danger btn-sm"
@@ -151,7 +153,7 @@
                                     </select>
                                 </div>
                             </div>
-                            
+
 
                         </div>
                         <div class="row">
@@ -170,7 +172,7 @@
                                         id="harga" name="harga" required placeholder="Harga">
                                 </div>
                             </div>
-                            
+
                         </div>
                         <div class="row">
                             <div class="col-lg-6">
@@ -183,8 +185,8 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="total_harga" class="form-control-label ">Total Harga</label>
-                                    <input type="text"  class="form-control" readonly
-                                        id="total_harga_display" required placeholder="Total Harga">
+                                    <input type="text" class="form-control" readonly id="total_harga_display" required
+                                        placeholder="Total Harga">
                                 </div>
                                 <!-- INI YANG DIKIRIM KE SERVER -->
                                 <input type="hidden" id="total_harga" name="total_harga">
@@ -204,70 +206,106 @@
         </div>
     </div>
 
+
     <!-- Modal Edit -->
-    <div class="modal fade" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="modalEdit" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Edit Data Penjualan</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                    <h5 class="modal-title">Edit Data Penjualan</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
                     </button>
                 </div>
 
                 <form action="{{ route('riwayat-penjualan.update') }}" method="POST">
                     @csrf
                     <div class="modal-body">
+
                         <input type="hidden" name="id" id="id_penjualan">
+
+                        <!-- Tanggal & Jumlah -->
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label for="tanggal_penjualan" class="form-control-label">Tanggal Penjualan</label>
+                                    <label>Tanggal Penjualan</label>
                                     <input type="date" class="form-control" id="tanggal_penjualan_edit"
                                         name="tanggal_penjualan" required>
                                 </div>
                             </div>
+
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label for="jumlah_penjualan" class="form-control-label">Jumlah Penjualan (kg)</label>
+                                    <label>Jumlah Penjualan (kg)</label>
                                     <input type="number" min="0" step="0.01" class="form-control"
-                                        id="jumlah_penjualan_edit" name="jumlah_penjualan" required
-                                        placeholder="Jumlah Penjualan">
+                                        id="jumlah_penjualan_edit" name="jumlah_penjualan" required>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Harga & Total -->
                         <div class="row">
                             <div class="col-lg-6">
-                                <div class="form-select">
-                                    <label for="id" class="form-control-label">Jenis Jeruk</label>
+                                <div class="form-group">
+                                    <label>Harga</label>
+                                    <input type="number" min="0" step="0.01" class="form-control"
+                                        id="harga_edit" name="harga" required>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>Total Harga</label>
+
+                                    <!-- tampil ke user -->
+                                    <input type="text" class="form-control" id="total_harga_view_edit" readonly>
+
+                                    <!-- dikirim ke server -->
+                                    <input type="hidden" id="total_harga_edit" name="total_harga">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Jenis Jeruk & Keterangan -->
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label>Jenis Jeruk</label>
                                     <select name="id_jenis" id="id_jenis" class="form-control">
                                         @foreach ($jenisJeruks as $jeruk)
-                                            <option value="{{ $jeruk->id }}">{{ $jeruk->jenis_jeruk }}</option>
+                                            <option value="{{ $jeruk->id }}">
+                                                {{ $jeruk->jenis_jeruk }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
+
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label for="keterangan" class="form-control-label">Keterangan</label>
-                                    <input type="text" class="form-control" id="keterangan_edit" name="keterangan"
-                                        placeholder="Masukkan keterangan">
+                                    <label>Keterangan</label>
+                                    <input type="text" class="form-control" id="keterangan_edit" name="keterangan">
                                 </div>
                             </div>
                         </div>
+
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-primary">Update</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            Batal
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            Update
+                        </button>
                     </div>
-                </form>
 
+                </form>
             </div>
         </div>
     </div>
+
 
 
 
@@ -276,49 +314,64 @@
 
 @section('js')
     <script>
-        $(document).ready(function() {
-            $(document).on('click', '#btn-edit', function() {
 
-                let id = $(this).data('id');
-                let id_jenis = $(this).data('id_jenis');
-                let tanggal_penjualan = $(this).data('tanggal_penjualan');
-                let jumlah_penjualan = $(this).data('jumlah_penjualan');
-                let keterangan = $(this).data('keterangan');
-                // Masukkan ke form modal
-
-                $('#id_penjualan').val(id);
-                $('#id_jenis').val(id_jenis).trigger('change');
-                $('#tanggal_penjualan_edit').val(tanggal_penjualan);
-                $('#jumlah_penjualan_edit').val(jumlah_penjualan);
-                $('#keterangan_edit').val(keterangan);
-                // Tampilkan modal
-                $('#modalEdit').modal('show');
-            });
-
-        })
-
-        $(document).ready(function () {
-
-// Format angka ke Rupiah
+        // Format angka ke Rupiah
 function formatRupiah(angka) {
     return "Rp " + angka.toLocaleString('id-ID');
 }
 
-function hitungTotal() {
-    let jumlah = parseFloat($('#jumlah_penjualan').val()) || 0;
-    let harga  = parseFloat($('#harga').val()) || 0;
 
-    let total = jumlah * harga;
+        function hitungTotalEdit() {
+            let jumlah = parseFloat($('#jumlah_penjualan_edit').val()) || 0;
+            let harga = parseFloat($('#harga_edit').val()) || 0;
 
-    // Tampilkan ke user (format rupiah)
-    $('#total_harga_display').val(formatRupiah(total));
+            let total = jumlah * harga;
 
-    // Simpan nilai murni ke hidden input
-    $('#total_harga').val(total);
-}
+            $('#total_harga_edit').val(total);
+            $('#total_harga_view_edit').val(formatRupiah(total));
+        }
 
-$('#jumlah_penjualan, #harga').on('input', hitungTotal);
+        $(document).on('click', '.btn-edit', function() {
 
-});
+            $('#id_penjualan').val($(this).data('id'));
+            $('#tanggal_penjualan_edit').val($(this).data('tanggal_penjualan'));
+            $('#jumlah_penjualan_edit').val($(this).data('jumlah_penjualan'));
+            $('#harga_edit').val($(this).data('harga'));
+            
+            
+            
+            $('#keterangan_edit').val($(this).data('keterangan'));
+            
+            $('#id_jenis').val($(this).data('id_jenis')).trigger('change');
+
+            let total = $(this).data('total_harga');
+            $('#total_harga_edit').val(total);
+            $('#total_harga_view_edit').val(formatRupiah(total));
+        });
+
+        $('#jumlah_penjualan_edit, #harga_edit').on('input', function() {
+            hitungTotalEdit();
+        });
+
+        $(document).ready(function() {
+
+
+
+            function hitungTotal() {
+                let jumlah = parseFloat($('#jumlah_penjualan').val()) || 0;
+                let harga = parseFloat($('#harga').val()) || 0;
+
+                let total = jumlah * harga;
+
+                // Tampilkan ke user (format rupiah)
+                $('#total_harga_display').val(formatRupiah(total));
+
+                // Simpan nilai murni ke hidden input
+                $('#total_harga').val(total);
+            }
+
+            $('#jumlah_penjualan, #harga').on('input', hitungTotal);
+
+        });
     </script>
 @endsection

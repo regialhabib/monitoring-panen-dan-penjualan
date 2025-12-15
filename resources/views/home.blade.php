@@ -1,17 +1,16 @@
 @extends('layouts.admin')
 
 @section('main-content')
-
     <!-- Page Heading -->
     <h1 class="h3 mb-4 text-gray-800">{{ __('Dashboard') }}</h1>
 
     @if (session('success'))
-    <div class="alert alert-success border-left-success alert-dismissible fade show" role="alert">
-        {{ session('success') }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
+        <div class="alert alert-success border-left-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
     @endif
 
     @if (session('status'))
@@ -20,201 +19,479 @@
         </div>
     @endif
 
+    {{-- KPI --}}
     <div class="row">
 
-        <!-- Earnings (Monthly) Card Example -->
+        <!-- Total Panen -->
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Earnings (Monthly)</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Total Panen
+                            </div>
+                            <div class="h5 font-weight-bold text-gray-800 kpi-counter"
+                                data-value="{{ $kpi['total_panen'] }}" data-suffix=" kg">
+                                0
+                            </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                            <i class="fas fa-seedling fa-2x text-gray-300"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Earnings (Monthly) Card Example -->
+        <!-- Total Penjualan -->
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-success shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Earnings (Annual)</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Total Penjualan
+                            </div>
+                            <div class="h5 font-weight-bold text-gray-800 kpi-counter"
+                                data-value="{{ $kpi['total_penjualan'] }}" data-suffix=" kg">
+                                0
+                            </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                            <i class="fas fa-shopping-cart fa-2x text-gray-300"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Earnings (Monthly) Card Example -->
+        <!-- Stok Saat Ini -->
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-info shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks</div>
-                            <div class="row no-gutters align-items-center">
-                                <div class="col-auto">
-                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
-                                </div>
-                                <div class="col">
-                                    <div class="progress progress-sm mr-2">
-                                        <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                </div>
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Stok Saat Ini
+                            </div>
+                            <div class="h5 font-weight-bold text-gray-800 kpi-counter"
+                                data-value="{{ $kpi['stok_saat_ini'] }}" data-suffix=" kg">
+                                0
                             </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                            <i class="fas fa-boxes fa-2x text-gray-300"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Users -->
+        <!-- Pendapatan -->
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-warning shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">{{ __('Users') }}</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $widget['users'] }}</div>
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Pendapatan
+                            </div>
+                            <div class="h5 font-weight-bold text-gray-800 kpi-counter" data-value="{{ $kpi['pendapatan'] }}"
+                                data-prefix="Rp ">
+                                0
+                            </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                            <i class="fas fa-money-bill-wave fa-2x text-gray-300"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
 
+
+    {{-- CHART ROW 1 --}}
     <div class="row">
-
-        <!-- Content Column -->
-        <div class="col-lg-6 mb-4">
-
-            <!-- Project Card Example -->
+        <div class="col-md-6">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Projects</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        Panen per Bulan (kg)
+                    </h6>
                 </div>
                 <div class="card-body">
-                    <h4 class="small font-weight-bold">Server Migration <span class="float-right">20%</span></h4>
-                    <div class="progress mb-4">
-                        <div class="progress-bar bg-danger" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <h4 class="small font-weight-bold">Sales Tracking <span class="float-right">40%</span></h4>
-                    <div class="progress mb-4">
-                        <div class="progress-bar bg-warning" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <h4 class="small font-weight-bold">Customer Database <span class="float-right">60%</span></h4>
-                    <div class="progress mb-4">
-                        <div class="progress-bar" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <h4 class="small font-weight-bold">Payout Details <span class="float-right">80%</span></h4>
-                    <div class="progress mb-4">
-                        <div class="progress-bar bg-info" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <h4 class="small font-weight-bold">Account Setup <span class="float-right">Complete!</span></h4>
-                    <div class="progress">
-                        <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="chart-area">
+                        <canvas id="panenChart"></canvas>
                     </div>
                 </div>
             </div>
-
-            <!-- Color System -->
-            <div class="row">
-                <div class="col-lg-6 mb-4">
-                    <div class="card bg-primary text-white shadow">
-                        <div class="card-body">
-                            Primary
-                            <div class="text-white-50 small">#4e73df</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card bg-success text-white shadow">
-                        <div class="card-body">
-                            Success
-                            <div class="text-white-50 small">#1cc88a</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card bg-info text-white shadow">
-                        <div class="card-body">
-                            Info
-                            <div class="text-white-50 small">#36b9cc</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card bg-warning text-white shadow">
-                        <div class="card-body">
-                            Warning
-                            <div class="text-white-50 small">#f6c23e</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card bg-danger text-white shadow">
-                        <div class="card-body">
-                            Danger
-                            <div class="text-white-50 small">#e74a3b</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4">
-                    <div class="card bg-secondary text-white shadow">
-                        <div class="card-body">
-                            Secondary
-                            <div class="text-white-50 small">#858796</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         </div>
 
-        <div class="col-lg-6 mb-4">
-
-            <!-- Illustrations -->
+        <div class="col-md-6">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Illustrations</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        Penjualan per Bulan (kg)
+                    </h6>
                 </div>
                 <div class="card-body">
-                    <div class="text-center">
-                        <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="{{ asset('img/svg/undraw_editable_dywm.svg') }}" alt="">
+                    <div class="chart-area">
+                        <canvas id="penjualanChart"></canvas>
                     </div>
-                    <p>Add some quality, svg illustrations to your project courtesy of <a target="_blank" rel="nofollow" href="https://undraw.co/">unDraw</a>, a constantly updated collection of beautiful svg images that you can use completely free and without attribution!</p>
-                    <a target="_blank" rel="nofollow" href="https://undraw.co/">Browse Illustrations on unDraw →</a>
-                </div>
-            </div>
-
-            <!-- Approach -->
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Development Approach</h6>
-                </div>
-                <div class="card-body">
-                    <p>SB Admin 2 makes extensive use of Bootstrap 4 utility classes in order to reduce CSS bloat and poor page performance. Custom CSS classes are used to create custom components and custom utility classes.</p>
-                    <p class="mb-0">Before working with this theme, you should become familiar with the Bootstrap framework, especially the utility classes.</p>
                 </div>
             </div>
 
         </div>
     </div>
+
+    {{-- CHART ROW 2 --}}
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        Panen vs Penjualan
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="panenVsPenjualanChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        Stok per Jenis Jeruk (kg)
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="stokChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    {{-- CHART ROW 3 --}}
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        Pendapatan per Bulan (Rp)
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="pendapatanChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        Kontribusi Penjualan per Jenis
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-pie pt-4">
+                        <canvas id="kontribusiChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+@endsection
+
+@section('css')
+    <style>
+        .chart-pie {
+            position: relative;
+            height: 15rem;
+        }
+    </style>
+@endsection
+
+@section('js')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        Chart.defaults.font.family = "'Nunito', '-apple-system', BlinkMacSystemFont";
+        Chart.defaults.font.size = 12;
+        Chart.defaults.color = '#858796';
+
+        const gridStyle = {
+            color: "rgba(234, 236, 244, 1)",
+            zeroLineColor: "rgba(234, 236, 244, 1)",
+            drawBorder: false
+        };
+        const bulan = @json($bulan);
+        const panenData = @json($panenPerBulan);
+        const penjualanData = @json($penjualanPerBulan);
+        const pendapatanData = @json($pendapatanPerBulan);
+
+        const stokJenisLabel = @json($stokPerJenis->pluck('jenis_jeruk'));
+        const stokJenisData = @json($stokPerJenis->pluck('total'));
+
+        const kontribusiLabel = @json($kontribusiPenjualan->pluck('jenis_jeruk'));
+        const kontribusiData = @json($kontribusiPenjualan->pluck('total'));
+        const colors = {
+            primary: '#4e73df',
+            success: '#1cc88a',
+            info: '#36b9cc',
+            warning: '#f6c23e',
+            danger: '#e74a3b',
+            gray: '#858796'
+        };
+
+        $('.kpi-counter').each(function() {
+            const el = $(this);
+            const value = parseFloat(el.data('value')) || 0;
+            const prefix = el.data('prefix') || '';
+            const suffix = el.data('suffix') || '';
+
+            $({
+                count: 0
+            }).animate({
+                count: value
+            }, {
+                duration: 1000,
+                easing: 'swing',
+                step: function() {
+                    el.text(
+                        prefix +
+                        Math.floor(this.count).toLocaleString('id-ID') +
+                        suffix
+                    );
+                },
+                complete: function() {
+                    el.text(
+                        prefix +
+                        value.toLocaleString('id-ID') +
+                        suffix
+                    );
+                }
+            });
+        });
+
+
+
+        new Chart(document.getElementById('panenChart'), {
+            type: 'line',
+            data: {
+                labels: bulan,
+                datasets: [{
+                    label: 'Panen (kg)',
+                    data: panenData,
+                    borderColor: colors.primary,
+                    backgroundColor: 'rgba(78, 115, 223, 0.05)',
+                    pointRadius: 3,
+                    pointBackgroundColor: colors.primary,
+                    pointBorderColor: colors.primary,
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: "#fff",
+                        bodyColor: "#858796",
+                        borderColor: '#dddfeb',
+                        borderWidth: 1
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        grid: gridStyle
+                    }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('penjualanChart'), {
+            type: 'line',
+            data: {
+                labels: bulan,
+                datasets: [{
+                    label: 'Penjualan (kg)',
+                    data: penjualanData,
+                    borderColor: colors.success,
+                    backgroundColor: 'rgba(28, 200, 138, 0.05)',
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        grid: gridStyle
+                    }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('panenVsPenjualanChart'), {
+            type: 'line',
+            data: {
+                labels: bulan,
+                datasets: [{
+                        label: 'Panen',
+                        data: panenData,
+                        borderColor: colors.primary,
+                        borderWidth: 2,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Penjualan',
+                        data: penjualanData,
+                        borderColor: colors.success,
+                        borderWidth: 2,
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        grid: gridStyle
+                    }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('stokChart'), {
+            type: 'bar',
+            data: {
+                labels: stokJenisLabel,
+                datasets: [{
+                    data: stokJenisData,
+                    backgroundColor: colors.info
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        grid: gridStyle
+                    }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('pendapatanChart'), {
+            type: 'bar',
+            data: {
+                labels: bulan,
+                datasets: [{
+                    data: pendapatanData,
+                    backgroundColor: colors.warning
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        grid: gridStyle,
+                        ticks: {
+                            callback: value => 'Rp ' + value.toLocaleString('id-ID')
+                        }
+                    }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('kontribusiChart'), {
+            type: 'doughnut',
+            data: {
+                labels: kontribusiLabel,
+                datasets: [{
+                    data: kontribusiData,
+                    backgroundColor: [
+                        colors.primary,
+                        colors.success,
+                        colors.info
+                    ],
+                    hoverBorderColor: "rgba(234, 236, 244, 1)"
+                }]
+            },
+            options: {
+                maintainAspectRatio: false, // 🔥 WAJIB
+                cutout: '70%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 15
+                        }
+                    }
+                }
+            }
+        });
+    </script>
 @endsection

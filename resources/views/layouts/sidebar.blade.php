@@ -46,13 +46,13 @@
 
     <li class="nav-item {{ Nav::isRoute('jenis-jeruk.index') }}">
         <a class="nav-link" href="{{ route('jenis-jeruk.index') }}">
-             <i class="fas fa-fw fa-user"></i>
+            <i class="fas fa-fw fa-apple-alt"></i>
             <span>{{ __('jenis Jeruk') }}</span>
         </a>
     </li>
     <li class="nav-item {{ Nav::isRoute('riwayat-panen.index') }}">
         <a class="nav-link" href="{{ route('riwayat-panen.index') }}">
-             <i class="fas fa-fw fa-user"></i>
+            <i class="fas fa-fw fa-seedling"></i>
             <span>{{ __('Riwayat Panen') }}</span>
         </a>
     </li>
@@ -63,8 +63,24 @@
 
     <li class="nav-item {{ Nav::isRoute('riwayat-penjualan.index') }}">
         <a class="nav-link" href="{{ route('riwayat-penjualan.index') }}">
-             <i class="fas fa-fw fa-user"></i>
+            <i class="fas fa-fw fa-shopping-cart"></i>
             <span>{{ __('Riwayat Penjualan') }}</span>
+        </a>
+    </li>
+    <div class="sidebar-heading">
+        {{ __('Laporan') }}
+    </div>
+
+    <li class="nav-item {{ Nav::isRoute('panen.report') }}">
+        <a class="nav-link" href="{{ route('panen.report') }}">
+            <i class="fas fa-fw fa-chart-line"></i>
+            <span>{{ __('Laporan Panen') }}</span>
+        </a>
+    </li>
+    <li class="nav-item {{ Nav::isRoute('penjualan.report') }}">
+        <a class="nav-link" href="{{ route('penjualan.report') }}">
+            <i class="fas fa-fw fa-chart-line"></i>
+            <span>{{ __('Laporan Penjualan') }}</span>
         </a>
     </li>
     <!-- Sidebar Toggler (Sidebar) -->
@@ -73,5 +89,5 @@
     </div>
 
 
-    
+
 </ul>

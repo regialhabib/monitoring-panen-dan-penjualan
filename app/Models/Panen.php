@@ -28,4 +28,7 @@ class Panen extends Model
     {
         return $this->hasOne(Stok::class, 'id_jenis');
     }
+
+
+    
 }

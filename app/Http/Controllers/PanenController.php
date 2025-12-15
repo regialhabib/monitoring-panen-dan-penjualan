@@ -7,6 +7,7 @@ use App\Models\Panen;
 use App\Models\JenisJeruk;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
 class PanenController extends Controller
@@ -44,7 +45,7 @@ class PanenController extends Controller
         ]);
 
         DB::beginTransaction();
-        
+
         try {
             Panen::create([
                 'tanggal_panen' => $request->tanggal_panen,
@@ -54,10 +55,10 @@ class PanenController extends Controller
             ]);
 
             $jumlah_stok = Stok::where('id_jenis', $request->id_jenis)->first();
-            if($jumlah_stok){
+            if ($jumlah_stok) {
                 $jumlah_stok->jumlah_stok += $request->jumlah_panen;
                 $jumlah_stok->save();
-            }else{
+            } else {
                 Stok::create([
                     'id_jenis' => $request->id_jenis,
                     'jumlah_stok' => $request->jumlah_panen,
@@ -93,71 +94,69 @@ class PanenController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request)
-{
-    $request->validate([
-        'tanggal_panen' => 'required',
-        'jumlah_panen' => 'required',
-        'id_jenis' => 'required|exists:jenis_jeruks,id',
-        'keterangan' => 'required',
-    ]);
+    {
+        $request->validate([
+            'tanggal_panen' => 'required',
+            'jumlah_panen' => 'required',
+            'id_jenis' => 'required|exists:jenis_jeruks,id',
+            'keterangan' => 'required',
+        ]);
 
-    DB::beginTransaction();
-    try {
-        $panen = Panen::findOrFail($request->id);
+        DB::beginTransaction();
+        try {
+            $panen = Panen::findOrFail($request->id);
 
-        $jumlah_panen_lama = $panen->jumlah_panen;
-        $jumlah_panen_baru = $request->jumlah_panen;
+            $jumlah_panen_lama = $panen->jumlah_panen;
+            $jumlah_panen_baru = $request->jumlah_panen;
 
-        // SELISIH
-        $selisih = $jumlah_panen_baru - $jumlah_panen_lama;
+            // SELISIH
+            $selisih = $jumlah_panen_baru - $jumlah_panen_lama;
 
-        // SIMPAN ID JENIS LAMA
-        $id_jenis_lama = $panen->id_jenis;
+            // SIMPAN ID JENIS LAMA
+            $id_jenis_lama = $panen->id_jenis;
 
-        // UPDATE PANEN (UPDATE id_jenis juga)
-        $panen->update($request->all());
+            // UPDATE PANEN (UPDATE id_jenis juga)
+            $panen->update($request->all());
 
-        // *** KASUS 1: Jika id_jenis TIDAK BERUBAH ***
-        if ($id_jenis_lama == $request->id_jenis) {
+            // *** KASUS 1: Jika id_jenis TIDAK BERUBAH ***
+            if ($id_jenis_lama == $request->id_jenis) {
 
-            $stok = Stok::firstOrCreate(
-                ['id_jenis' => $panen->id_jenis],
-                ['jumlah_stok' => 0]
-            );
+                $stok = Stok::firstOrCreate(
+                    ['id_jenis' => $panen->id_jenis],
+                    ['jumlah_stok' => 0]
+                );
 
-            $stok->jumlah_stok += $selisih;
-            $stok->save();
+                $stok->jumlah_stok += $selisih;
+                $stok->save();
+            } else {
+                // *** KASUS 2: id_jenis BERUBAH ***
 
-        } else {
-            // *** KASUS 2: id_jenis BERUBAH ***
+                // Kurangi stok jenis lama
+                $stok_lama = Stok::firstOrCreate(
+                    ['id_jenis' => $id_jenis_lama],
+                    ['jumlah_stok' => 0]
+                );
 
-            // Kurangi stok jenis lama
-            $stok_lama = Stok::firstOrCreate(
-                ['id_jenis' => $id_jenis_lama],
-                ['jumlah_stok' => 0]
-            );
+                $stok_lama->jumlah_stok -= $jumlah_panen_lama;
+                $stok_lama->save();
 
-            $stok_lama->jumlah_stok -= $jumlah_panen_lama;
-            $stok_lama->save();
+                // Tambah stok jenis baru
+                $stok_baru = Stok::firstOrCreate(
+                    ['id_jenis' => $request->id_jenis],
+                    ['jumlah_stok' => 0]
+                );
 
-            // Tambah stok jenis baru
-            $stok_baru = Stok::firstOrCreate(
-                ['id_jenis' => $request->id_jenis],
-                ['jumlah_stok' => 0]
-            );
+                $stok_baru->jumlah_stok += $jumlah_panen_baru;
+                $stok_baru->save();
+            }
 
-            $stok_baru->jumlah_stok += $jumlah_panen_baru;
-            $stok_baru->save();
+            DB::commit();
+            return redirect()->route('riwayat-panen.index')->with('success', 'Data Panen berhasil diubah');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->route('riwayat-panen.index')->with('error', 'Data Panen gagal diubah');
         }
-
-        DB::commit();
-        return redirect()->route('riwayat-panen.index')->with('success', 'Data Panen berhasil diubah');
-
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return redirect()->route('riwayat-panen.index')->with('error', 'Data Panen gagal diubah');
     }
-}
 
 
     /**
@@ -177,5 +176,52 @@ class PanenController extends Controller
             DB::rollBack();
             return redirect()->route('riwayat-panen.index')->with('error', 'Data Panen gagal dihapus');
         }
+    }
+
+    public function report()
+    {
+        return view('panen.panen_report');
+    }
+
+    public function data(Request $request)
+    {
+        $request->validate([
+            'tanggal_awal'  => 'required|date',
+            'tanggal_akhir' => 'required|date',
+        ]);
+
+        $data = Panen::with('jenis')
+            ->whereBetween('tanggal_panen', [
+                $request->tanggal_awal,
+                $request->tanggal_akhir
+            ])
+            ->orderBy('tanggal_panen')
+            ->get();
+
+        return response()->json($data);
+    }
+
+    public function print(Request $request)
+    {
+        $request->validate([
+            'tanggal_awal'  => 'required|date',
+            'tanggal_akhir' => 'required|date|after_or_equal:tanggal_awal',
+        ]);
+
+        $data = Panen::with('jenis')
+            ->whereBetween('tanggal_panen', [
+                $request->tanggal_awal,
+                $request->tanggal_akhir
+            ])
+            ->orderBy('tanggal_panen')
+            ->get();
+
+        $pdf = Pdf::loadView('panen.panen_print', [
+            'data' => $data,
+            'tanggal_awal' => $request->tanggal_awal,
+            'tanggal_akhir' => $request->tanggal_akhir,
+        ])->setPaper('A4', 'portrait');
+
+        return $pdf->stream('panen.panen_print');
     }
 }

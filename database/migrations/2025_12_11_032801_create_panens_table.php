@@ -16,7 +16,7 @@ return new class extends Migration
             $table->date('tanggal_panen');
             $table->decimal('jumlah_panen', 10, 1);
             $table->string('keterangan');
-            $table->foreignId('id_jenis')->constrained('jenis_jeruks');
+            $table->foreignId('id_jenis')->constrained('jenis_jeruks')->onDelete('cascade');
             $table->timestamps();
         });
     }

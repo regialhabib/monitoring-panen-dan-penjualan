@@ -87,7 +87,7 @@ class JenisJerukController extends Controller
             $jenisJeruk->delete();
         } catch (\Exception $e) {
             return redirect()->route('jenis-jeruk.index')
-                ->with('error', 'Jenis Jeruk tidak ditemukan.');
+                ->with('error', $e->getMessage());
         }
         
         return redirect()->route('jenis-jeruk.index')
