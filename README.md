@@ -1,84 +1,58 @@
-# Laravel SB Admin 2
+# Monitoring Jeruk
 
-SB Admin 2 for Laravel.
+Monitoring Jeruk adalah aplikasi web berbasis Laravel untuk memantau, mencatat, serta mengelola aktivitas panen dan penjualan jeruk.
 
-| Laravel Version | Branch | Support     |
-|-----------------|--------|-------------|
-| 12.0            | main   |             |
-| 11.0            | v11.0  |             |
-| 10.0            | v10.0  | End of life |
-| 9.0             | v9.0   | End of life |
-| 8.0             | v8.0   | End of life |
+## Fitur
 
-## Requirements
+- **Dashboard**: Statistik singkat aktivitas panen dan penjualan.  
+- **Jenis Jeruk**: Kelola data jenis-jenis jeruk.
+- **Riwayat Panen**: Catat hasil panen, waktu, dan jenis jeruk.
+- **Riwayat Penjualan**: Pantau penjualan dari hasil panen.
+- **Laporan**: Unduh laporan panen dan penjualan (untuk admin).
+- **Profil**: Kelola profil pengguna.
+- **Hak Akses**: Sistem user dan admin dengan wewenang berbeda.
 
-- PHP >= 8.2
-- Ctype PHP Extension
-- cURL PHP Extension
-- DOM PHP Extension
-- Fileinfo PHP Extension
-- Filter PHP Extension
-- Hash PHP Extension
-- Mbstring PHP Extension
-- OpenSSL PHP Extension
-- PCRE PHP Extension
-- PDO PHP Extension
-- Session PHP Extension
-- Tokenizer PHP Extension
-- XML PHP Extension
+## Instalasi
 
-## Installation
+1. **Clone repositori**
+   ```
+   git clone https://github.com/username/monitoring-jeruk.git
+   cd monitoring-jeruk
+   ```
 
-- Clone the repo and `cd` into it
-- Run `composer install`
-- Rename or copy `.env.example` file to `.env`
-- Run `php artisan key:generate`
-- Set your database credentials in your `.env` file
+2. **Instal dependensi**
+   ```
+   composer install
+   npm install && npm run dev
+   ```
 
-## Note
+3. **Konfigurasi environment**
+   ```
+   cp .env.example .env
+   php artisan key:generate
+   ```
+   Edit `.env` untuk pengaturan database.
 
-Recommend to install this preset on a project that you are starting from scratch, otherwise your project's design might break.
+4. **Migrasi dan seeder**
+   ```
+   php artisan migrate --seed
+   ```
 
-If you found this project useful, then please consider giving it a :star:
+5. **Jalankan aplikasi**
+   ```
+   php artisan serve
+   ```
 
-## Credits
+## Hak Akses
 
-Laravel SB Admin 2 uses some open-source third-party libraries/packages, many thanks to the web community.
+- **Admin**: Kelola semua data, akses laporan.
+- **User**: Input/lihat data panen, penjualan, dan profil.
 
-- Laravel - Open source framework.
-- LaravelEasyNav - Making managing navigation in Laravel easy.
-- SB Admin 2 - Thanks to Start Bootstrap.
+## Kontribusi
 
-## Preview
+Pull request sangat diterima! Silakan buka _issue_ untuk saran atau laporan bug.
 
-`login`
+## Lisensi
 
-<img src="https://imgur.com/YjGp6Sbl.png">
+MIT
 
-***
-
-`register`
-
-<img src="https://imgur.com/Wj09cu4l.png">
-
-***
-
-`dashboard`
-
-<img src="https://imgur.com/CrmOfT5l.png">
-
-***
-
-`profile`
-
-<img src="https://imgur.com/5t4eS1rl.png">
-
-***
-
-`logout`
-
-<img src="https://imgur.com/d9JclOYl.png">
-
-## License
-
-Licensed under the [MIT](LICENSE) license.
