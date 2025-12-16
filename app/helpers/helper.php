@@ -20,3 +20,15 @@ if (!function_exists('formatRupiah')) {
         return $prefix . number_format($angka, 0, ',', '.');
     }
 }
+
+
+if (! function_exists('firstCharUpper')) {
+    function firstCharUpper(string $text): string
+    {
+        if (trim($text) === '') {
+            return '';
+        }
+
+        return mb_strtoupper(mb_substr($text, 0, 1));
+    }
+}

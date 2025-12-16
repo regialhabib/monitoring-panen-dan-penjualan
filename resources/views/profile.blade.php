@@ -29,7 +29,7 @@
 
             <div class="card shadow mb-4">
                 <div class="card-profile-image mt-4">
-                    <figure class="rounded-circle avatar avatar font-weight-bold" style="font-size: 60px; height: 180px; width: 180px;" data-initial="{{ Auth::user()->name }}"></figure>
+                    <figure class="rounded-circle avatar avatar font-weight-bold" style="font-size: 60px; height: 180px; width: 180px;" data-initial="{{ firstCharUpper(Auth::user()->nama) }}"></figure>
                 </div>
                 <div class="card-body">
 
@@ -69,8 +69,8 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="form-group focused">
-                                        <label class="form-control-label" for="name">Name<span class="small text-danger">*</span></label>
-                                        <input type="text" id="name" class="form-control" name="name" placeholder="Name" value="{{ old('name', Auth::user()->nama) }}">
+                                        <label class="form-control-label" for="name">Nama<span class="small text-danger">*</span></label>
+                                        <input type="text" id="name" class="form-control" name="nama" placeholder="Name" value="{{ old('name', Auth::user()->nama) }}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">

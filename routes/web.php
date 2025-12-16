@@ -36,14 +36,17 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/riwayat-penjualan/update', 'PenjualanController@update')->name('riwayat-penjualan.update');
     Route::get('/riwayat-penjualan/delete/{id}', 'PenjualanController@destroy')->name('riwayat-penjualan.destroy');
 
-    Route::get('/penjualan/report', 'PenjualanController@report')->name('penjualan.report');
     Route::get('/panen/report', 'PanenController@report')->name('panen.report');
-
     Route::get('/laporan/panen/data', [PanenController::class, 'data'])
         ->name('laporan.panen.data');
-
     Route::get('/panen/print', 'PanenController@print')
         ->name('laporan.panen.print');
+
+    Route::get('/penjualan/report', 'PenjualanController@report')->name('penjualan.report');
+    Route::get('/penjualan/data', 'PenjualanController@data')
+        ->name('laporan.penjualan.data');
+    Route::get('/penjualan/print', 'PenjualanController@print')
+        ->name('laporan.penjualan.print');
 });
 
 

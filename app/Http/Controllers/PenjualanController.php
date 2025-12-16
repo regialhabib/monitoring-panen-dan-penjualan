@@ -241,4 +241,52 @@ class PenjualanController extends Controller
     {
         return view('panen.penjualan_report');
     }
+
+    public function data(Request $request)
+    {
+        $request->validate([
+            'tanggal_awal'  => 'required|date',
+            'tanggal_akhir' => 'required|date|after_or_equal:tanggal_awal',
+        ]);
+
+        $data = Penjualan::with('jenis')
+            ->whereBetween('tanggal_penjualan', [
+                $request->tanggal_awal,
+                $request->tanggal_akhir
+            ])
+            ->orderBy('tanggal_penjualan')
+            ->get();
+
+        return response()->json([
+            'data' => $data,
+            'total' => $data->sum('total_harga')
+        ]);
+    }
+
+    public function print(Request $request)
+    {
+        $request->validate([
+            'tanggal_awal'  => 'required|date',
+            'tanggal_akhir' => 'required|date|after_or_equal:tanggal_awal',
+        ]);
+
+        $data = Penjualan::with('jenis')
+            ->whereBetween('tanggal_penjualan', [
+                $request->tanggal_awal,
+                $request->tanggal_akhir
+            ])
+            ->orderBy('tanggal_penjualan')
+            ->get();
+
+        $total = $data->sum('total_harga');
+
+        $pdf = Pdf::loadView('panen.penjualan_print', [
+            'data' => $data,
+            'total' => $total,
+            'tanggal_awal' => $request->tanggal_awal,
+            'tanggal_akhir' => $request->tanggal_akhir,
+        ])->setPaper('A4', 'portrait');
+
+        return $pdf->stream('panen.penjualan_print');
+    }
 }
