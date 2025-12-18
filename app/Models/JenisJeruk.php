@@ -20,4 +20,11 @@ class JenisJeruk extends Model
     {
         return $this->hasMany(Panen::class, 'id_jenis');
     }
+
+    // JenisJeruk.php
+public function rencanaPanens()
+{
+    return $this->hasMany(RencanaPanen::class, 'id_jenis');
+}
+
 }

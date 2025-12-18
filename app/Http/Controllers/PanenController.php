@@ -224,4 +224,6 @@ class PanenController extends Controller
 
         return $pdf->stream('panen.panen_print');
     }
+
+   
 }

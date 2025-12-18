@@ -61,6 +61,14 @@
         </a>
     </li>
 
+    <li class="nav-item {{ nav::IsRoute('perencanaan-panen.index') }}">
+        <a class="nav-link" href="{{ route('perencanaan-panen.index') }}">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Perencanaan Panen</span>
+        </a>
+    </li>
+
+
     <div class="sidebar-heading">
         {{ __('Penjualan') }}
     </div>

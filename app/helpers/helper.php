@@ -13,6 +13,19 @@ if (!function_exists('formatKg')) {
     }
 }
 
+if (!function_exists('format')) {
+    function format($value) {
+        $num = floatval($value);
+
+        if (floor($num) == $num) {
+            return intval($num);
+        }
+
+        $formatted = rtrim(rtrim(number_format($num, 1, '.', ''), '0'), '.');
+        return $formatted;
+    }
+}
+
 
 
 if (!function_exists('formatRupiah')) {

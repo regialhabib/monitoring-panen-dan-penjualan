@@ -8,6 +8,7 @@ Monitoring Jeruk adalah aplikasi web berbasis Laravel untuk memantau, mencatat, 
 - **Jenis Jeruk**: Kelola data jenis-jenis jeruk.
 - **Riwayat Panen**: Catat hasil panen, waktu, dan jenis jeruk.
 - **Riwayat Penjualan**: Pantau penjualan dari hasil panen.
+- **Perencanaan Panen (Kalender)**: Fitur kalender untuk membuat, melihat, edit, dan hapus rencana panen berdasarkan tanggal serta jenis jeruk.
 - **Laporan**: Unduh laporan panen dan penjualan (untuk admin).
 - **Profil**: Kelola profil pengguna.
 - **Hak Akses**: Sistem user dan admin dengan wewenang berbeda.
@@ -16,7 +17,7 @@ Monitoring Jeruk adalah aplikasi web berbasis Laravel untuk memantau, mencatat, 
 
 1. **Clone repositori**
    ```
-   git clone https://github.com/username/monitoring-jeruk.git
+   git clone https://github.com/regialhabib/monitoring-jeruk.git
    cd monitoring-jeruk
    ```
 
@@ -55,4 +56,8 @@ Pull request sangat diterima! Silakan buka _issue_ untuk saran atau laporan bug.
 ## Lisensi
 
 MIT
+
+
+
+
 

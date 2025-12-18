@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PanenController;
+use App\Http\Controllers\RencanaPanenController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,12 +43,31 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/panen/print', 'PanenController@print')
         ->name('laporan.panen.print');
 
+    Route::get('/perencanan-panen', 'RencanaPanenController@index')->name('perencanaan-panen.index');
+
+
     Route::get('/penjualan/report', 'PenjualanController@report')->name('penjualan.report');
     Route::get('/penjualan/data', 'PenjualanController@data')
         ->name('laporan.penjualan.data');
     Route::get('/penjualan/print', 'PenjualanController@print')
         ->name('laporan.penjualan.print');
 });
+
+Route::get('/perencanaan-panen/events', [RencanaPanenController::class, 'events'])
+    ->name('perencanaan-panen.events')
+    ->middleware('auth');
+
+// routes/web.php
+Route::post('/perencanaan-panen/store', [RencanaPanenController::class, 'store'])
+    ->name('perencanaan-panen.store')
+    ->middleware('auth');
+
+Route::post('/perencanaan-panen/update', [RencanaPanenController::class, 'update'])
+    ->name('perencanaan-panen.update')
+    ->middleware('auth');
+Route::delete('/rencana-panen/{id}', [RencanaPanenController::class, 'destroy'])
+    ->name('rencana-panen.destroy');
+Route::get('/rencana-panen/{id}', [RencanaPanenController::class, 'show'])->name('perencanaan-panen.show')->middleware('auth');
 
 
 
